@@ -1,0 +1,17 @@
+import cv2
+detector = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')#load the pre-trained Haar Cascade classifier for frontal face detection
+cam = cv2.VideoCapture(0)#0 is the default camera if using a webcam keep it as 1
+while True:
+    ret, frame = cam.read()#capture video frames from the camera
+    if ret == False:#if the frame is not captured successfully, skip to the next iteration of the loop , again it will run from the beginning and try to capture the next frame
+        continue
+    all_faces =detector.detectMultiScale(frame)#detect faces in the captured frame using the Haar Cascade classifier
+    for face in all_faces:#loop through the detected faces and draw rectangles around them
+        x, y, w, h = face#unpack the coordinates and dimensions of the detected face
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)#draw a green rectangle around the detected face on the original frame
+    cv2.imshow("face detection", frame)#this will show the the processed frame with detected faces in a window titled "face detection"
+    key_pressed = cv2.waitKey(1) & 0xFF#finding which key you 
+    if key_pressed == ord('q'):#if the 'q' key is pressed, break the loop and exit the program 
+        break
+cam.release()#release the camera resource
+cv2.destroyAllWindows()#close all OpenCV windows
